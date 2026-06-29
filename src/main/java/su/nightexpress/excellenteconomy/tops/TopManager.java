@@ -96,14 +96,10 @@ public class TopManager extends AbstractManager<EconomyPlugin> {
     }
 
     public void updateBalances() {
-        this.topEntries.clear();
-
         Set<CoinsUser> users = this.userManager.getAll();
+        users.removeIf(CoinsUser::isHiddenFromTops);
 
-        users.removeIf(user -> {
-            user.player().ifPresent(this::hideOrShowInTops);
-            return user.isHiddenFromTops();
-        });
+        Map<String, Map<String, TopEntry>> built = new ConcurrentHashMap<>();
 
         this.currencyRegistry.getCurrencies().forEach(currency -> {
             AtomicInteger counter = new AtomicInteger(0);
@@ -115,8 +111,11 @@ public class TopManager extends AbstractManager<EconomyPlugin> {
                         .getName(), user.getId(), user.getBalance(currency)));
                 });
 
-            this.topEntries.put(currency.getId(), entries);
+            built.put(currency.getId(), entries);
         });
+
+        this.topEntries.clear();
+        this.topEntries.putAll(built);
     }
 
     public void handleJoin(@NonNull PlayerJoinEvent event) {

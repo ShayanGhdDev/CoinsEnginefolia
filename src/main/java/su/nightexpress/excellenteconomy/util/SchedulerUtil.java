@@ -1,6 +1,7 @@
 package su.nightexpress.excellenteconomy.util;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 
 import java.util.concurrent.TimeUnit;
@@ -53,6 +54,15 @@ public final class SchedulerUtil {
         }
         else {
             Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, task, intervalTicks, intervalTicks);
+        }
+    }
+
+    public static void runOnEntity(Plugin plugin, Entity entity, Runnable task) {
+        if (FOLIA) {
+            entity.getScheduler().run(plugin, scheduledTask -> task.run(), null);
+        }
+        else {
+            Bukkit.getScheduler().runTask(plugin, task);
         }
     }
 }
