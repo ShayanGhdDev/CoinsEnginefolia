@@ -29,6 +29,7 @@ public final class SchedulerUtil {
     }
 
     public static void runSync(Plugin plugin, Runnable task) {
+        if (plugin == null) throw new IllegalArgumentException("Plugin must not be null");
         if (FOLIA) {
             Bukkit.getGlobalRegionScheduler().run(plugin, scheduledTask -> task.run());
         }
@@ -38,6 +39,7 @@ public final class SchedulerUtil {
     }
 
     public static void runAsync(Plugin plugin, Runnable task) {
+        if (plugin == null) throw new IllegalArgumentException("Plugin must not be null");
         if (FOLIA) {
             Bukkit.getAsyncScheduler().runNow(plugin, scheduledTask -> task.run());
         }
@@ -58,6 +60,7 @@ public final class SchedulerUtil {
     }
 
     public static void runOnEntity(Plugin plugin, Entity entity, Runnable task) {
+        if (plugin == null) throw new IllegalArgumentException("Plugin must not be null");
         if (FOLIA) {
             entity.getScheduler().run(plugin, scheduledTask -> task.run(), null);
         }
