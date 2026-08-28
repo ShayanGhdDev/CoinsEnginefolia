@@ -29,7 +29,7 @@ public class CurrencyLogger {
     private final boolean logToFile;
 
     private BufferedWriter writer;
-    private boolean        running;
+    private volatile boolean running;
 
     public CurrencyLogger(@NotNull EconomyPlugin plugin,
                           @NotNull DateTimeFormatter formatter,
@@ -54,16 +54,22 @@ public class CurrencyLogger {
 
     public void shutdown() {
         this.running = false;
-        this.queue.clear();
 
         if (this.writer != null) {
             try {
+                LogEntry entry;
+                while ((entry = this.queue.poll()) != null) {
+                    String date = TimeUtil.getLocalDateTimeOf(entry.timestamp()).format(this.formatter);
+                    this.writer.append("[").append(date).append("] ").append(entry.log());
+                    this.writer.newLine();
+                }
                 this.writer.close();
             }
-            catch (IOException exception) {
+            catch (Exception exception) {
                 exception.printStackTrace();
             }
         }
+        this.queue.clear();
     }
 
     public void addEntry(@NotNull OperationContext context, @NotNull String log) {
