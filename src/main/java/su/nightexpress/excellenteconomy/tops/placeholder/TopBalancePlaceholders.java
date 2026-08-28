@@ -39,7 +39,7 @@ public class TopBalancePlaceholders implements PlaceholderProvider {
             entry.getBalance()));
 
         this.addTopPlaceholder(registry, "top_balance_clean", (entry, currency, position) -> NightMessage.stripTags(
-            currency.formatCompact(entry.getBalance())));
+            currency.format(entry.getBalance())));
         this.addTopPlaceholder(registry, "top_balance_legacy", (entry, currency, position) -> NightMessage.asLegacy(
             currency.format(entry.getBalance())));
         this.addTopPlaceholder(registry, "top_balance_raw", (entry, currency, position) -> currency.formatRaw(entry
