@@ -49,6 +49,7 @@ public final class SchedulerUtil {
     }
 
     public static void runAsyncRepeating(Plugin plugin, Runnable task, long intervalTicks) {
+        if (plugin == null) throw new IllegalArgumentException("Plugin must not be null");
         if (FOLIA) {
             long intervalMs = intervalTicks * 50L;
             Bukkit.getAsyncScheduler().runAtFixedRate(plugin, scheduledTask -> task.run(),
