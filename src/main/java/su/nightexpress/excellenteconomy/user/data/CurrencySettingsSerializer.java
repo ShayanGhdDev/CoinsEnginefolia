@@ -11,7 +11,8 @@ public class CurrencySettingsSerializer implements JsonSerializer<CurrencySettin
                                         JsonDeserializationContext context) throws JsonParseException {
         JsonObject object = element.getAsJsonObject();
 
-        boolean paymentsEnabled = object.get("paymentsEnabled").getAsBoolean();
+        JsonElement paymentsElement = object.get("paymentsEnabled");
+        boolean paymentsEnabled = paymentsElement != null && paymentsElement.getAsBoolean();
 
         return new CurrencySettings(paymentsEnabled);
     }
